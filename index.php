@@ -1,18 +1,10 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
     <meta charset="UTF-8">
     <title>学生信息管理系统</title>
 
     <?php include 'head.php'?>
-
-
-    <script>
-        var numberInput=document.forms["loginForm"]["number"].value;
-        var pwdInput=document.forms["loginForm"]["pwd"].value;
-        function jumpToRegister() {
-            window.location.href="register.php";
-        }
-    </script>
 
 <script>
     function login() {
@@ -30,7 +22,7 @@
                 document.getElementById("error").innerHTML = xmlhttp.responseText;
             }
         }
-        xmlhttp.open("GET", "login_verification.php?q1=" + numberInput + "&q2=" + pwdInput, true);
+        xmlhttp.open("GET", "login_verification.php?q1=" + numberInput + "&q2=" + pwdInput, false);
         xmlhttp.send();
     }
 </script>
@@ -54,11 +46,8 @@
             </form>
                 <div style="text-align:center;">
                     <button type="button" onclick="login()">登陆</button>
-                    <button type="button" onclick="jumpToRegister()">注册</button>
                 </div>
         </div>
-    </div>
-
 
 </body>
 </html>

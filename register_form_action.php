@@ -6,7 +6,7 @@
  * Time: 1:36
  */
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $S_id = $_POST["number"];
+    $S_number = $_POST["number"];
     $S_name = $_POST["name"];
     $S_age = $_POST["age"];
     if ($_POST["sex"]=="male"){
@@ -19,10 +19,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $S_pwd = $_POST["pwd"];
 }
 mysqli_select_db($conn,'stu_mngm_sys');
-$sql= "INSERT INTO STUDENTS (S_id,S_name,S_age,S_sex,S_class,S_grade,S_pwd) VALUES ($S_id,\"$S_name\",$S_age,$S_sex,$S_class,$S_grade,\"$S_pwd\");";
+$sql= "INSERT INTO STUDENTS (S_number,S_name,S_age,S_sex,S_class,S_grade,S_pwd) VALUES ($S_number,\"$S_name\",$S_age,$S_sex,$S_class,$S_grade,\"$S_pwd\");";
 if ($conn->query($sql) === TRUE) {
-    echo '<script>alert("注册成功！");
-    location.href="index.php"</script>';
+    echo '<script>alert("录入成功！");
+    location.href="query_page.php"</script>';
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }

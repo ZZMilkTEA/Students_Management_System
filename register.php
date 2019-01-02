@@ -25,11 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     else
     {
         $number = test_input($_POST["number"]);
-        if ($number<100000 ||$number>999999)
+        if ($number<100000000 ||$number>999999999)
         {
             $numberErr = "非法学号格式";
         }
-        else if(mysqli_fetch_array(mysqli_query($conn ,"select * from STUDENTS where S_id='$number'"))){
+        else if(mysqli_fetch_array(mysqli_query($conn , "select * from STUDENTS where S_number='$number'"))){
             $numberErr = "学号已经存在";
         }
         else{
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     else
     {
         $class = test_input($_POST["class"]);
-        if ($class<1000 || $class>9999)
+        if ($class<100000 || $class>999999)
         {
             $classErr = "非法班级格式";
         } else{
@@ -148,7 +148,7 @@ function test_input($data)
 ?>
 
 <div class="forms">
-    <h2 style="text-align:center;">注册框</h2>
+    <h2 style="text-align:center;">录入框</h2>
 
         <form style=" margin: 0 auto;width: auto"
         name="register_form"
@@ -157,7 +157,7 @@ function test_input($data)
             <table>
                 <tr>
                     <td class="f_description">学号：</td>
-                    <td class="f_content"><input type="text" name="number" value="<?php echo $number;?>">
+                    <td class="f_content"><input type="text" name="number" value="<?php echo $number;?>" placeholder="学号为9位整数">
                         <span class="error">* <?php echo $numberErr;?></span></td>
                 </tr>
                 <tr>
@@ -167,7 +167,7 @@ function test_input($data)
                 </tr>
                 <tr>
                     <td class="f_description">年龄：</td>
-                    <td class="f_content"><input type="text" name="age" value="<?php echo $age;?>">
+                    <td class="f_content"><input type="text" name="age" value="<?php echo $age;?>" placeholder="0~100">
                         <span class="error">* <?php echo $ageErr;?></span></td>
                 </tr>
                 <tr>
@@ -180,17 +180,24 @@ function test_input($data)
                 </tr>
                 <tr>
                     <td class="f_description">班级：</td>
-                    <td class="f_content"><input type="text" name="class" value="<?php echo $class;?>">
+                    <td class="f_content"><input type="text" name="class" value="<?php echo $class;?>" placeholder="班级为6位整数">
                         <span class="error">* <?php echo $classErr;?></span></td>
                 </tr>
                 <tr>
                     <td class="f_description">年级：</td>
-                    <td class="f_content"><input type="text" name="grade" value="<?php echo $grade;?>">
+                    <td class="f_content"><select name="grade"<?php echo $grade;?> >
+                            <option value="1" <?php if ($grade == 1) echo "selected";?> >1</option>
+                            <option value="2" <?php if ($grade == 2) echo "selected";?> >2</option>
+                            <option value="3" <?php if ($grade == 3) echo "selected";?> >3</option>
+                            <option value="4" <?php if ($grade == 4) echo "selected";?> >4</option>
+                            <option value="5" <?php if ($grade == 5) echo "selected";?> >5</option>
+                            <option value="6" <?php if ($grade == 6) echo "selected";?> >6</option>
+                        </select>
                         <span class="error">* <?php echo $gradeErr;?></span></td>
                 </tr>
                 <tr>
                     <td class="f_description">密码：</td>
-                    <td class="f_content"><input type="password" name="pwd"value="<?php echo $pwd;?>">
+                    <td class="f_content"><input type="password" name="pwd"value="<?php echo $pwd;?>"placeholder="请输入6~16位的密码">
                         <span class="error">* <?php echo $pwdErr;?></span></td>
                 </tr>
                 <tr>
@@ -200,7 +207,7 @@ function test_input($data)
                 </tr>
             </table>
             <div style="text-align: center">
-                <input type="submit" name="register" value="注册" >
+                <input type="submit" name="register" value="录入" >
             </div>
         </form>
 </div>
