@@ -9,7 +9,7 @@
 $colunm = isset($_GET["q1"])? $_GET["q1"]:"";
 $search_content = isset($_GET["q2"]) ? $_GET["q2"]:"";
 
-include "DB_connect.php";
+require "DB_connect.php";
 
 mysqli_set_charset($conn, "utf8");
 
@@ -30,6 +30,7 @@ echo "
 <th>性别</th>
 <th>班级</th>
 <th>年级</th>
+<th>操作</th>
 </tr>";
 
 $counter=0;
@@ -47,10 +48,16 @@ while($row = mysqli_fetch_array($result))
     echo "<td>" . sexShowTrsfmt($row['S_sex']) . "</td>";
     echo "<td>" . $row['S_class'] . "</td>";
     echo "<td>" . $row['S_grade'] . "</td>";
+    echo "<td> <button type='button' onclick='changeInfo(" . $row['S_number'] . ")'>修改</button>
+  <button type='button' onclick='deleteInfo(" . $row['S_number'] . ")'>删除</button></td>";
     echo "</tr>";
     $counter++;
 }
-echo "</table>";
+
+echo "
+</table>
+";
+
 
 
 function sexShowTrsfmt($input){

@@ -19,7 +19,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $S_pwd = $_POST["pwd"];
 }
 mysqli_select_db($conn,'stu_mngm_sys');
-$sql= "INSERT INTO STUDENTS (S_number,S_name,S_age,S_sex,S_class,S_grade,S_pwd) VALUES ($S_number,\"$S_name\",$S_age,$S_sex,$S_class,$S_grade,\"$S_pwd\");";
+$sql= "INSERT INTO STUDENTS (S_number,S_name,S_age,S_sex,S_class,S_grade,S_pwd) VALUES ($S_number,\"$S_name\",$S_age,$S_sex,$S_class,$S_grade,'$S_pwd');";
 if ($conn->query($sql) === TRUE) {
     echo '<script>alert("录入成功！");
     location.href="query_page.php"</script>';

@@ -6,10 +6,12 @@
  * Time: 3:10
  */
 
-$number = isset($_GET["q1"]) ? intval($_GET["q1"]) : '';
-$pwd = isset($_GET["q2"]) ? intval($_GET["q2"]) : '';
+session_start();
 
-include "DB_connect.php";
+$number = isset($_GET["q1"]) ? intval($_GET["q1"]) : '';
+$pwd = isset($_GET["q2"]) ? (string)$_GET["q2"] : '';
+
+require "DB_connect.php";
 
 if($number==""){
     echo "<p>学号必填</p>";
@@ -21,9 +23,10 @@ if($number==""){
         echo "<p>密码不正确</p>";
     } else {
         echo "<p>登陆成功！</p>";
-        $_SESSION['userinfo']=[
-            'uid' => $number
-        ];
+        $_SESSION['userinfo']=$number;
+        echo '<script>
+        location.href="student_info.php";     //学生登陆成功跳转到学生页面
+        </script>';
         exit;
     }
 }elseif (!mysqli_fetch_array(mysqli_query($conn ,"select * from admin_account where A_id=$number"))) {
@@ -32,12 +35,15 @@ if($number==""){
     $sql = "SELECT A_pwd FROM admin_account WHERE A_id=$number";
     $result = $conn->query($sql);
     $row = mysqli_fetch_assoc($result);
-    if ($row["A_pwd"] != $pwd) {
+    if (strcmp($row["A_pwd"],$pwd)) {
         echo "<p>密码不正确</p>";
     } else {
         echo "<p>管理员登陆成功！</p>";
-        $_SESSION['userinfo']=['uid' => $number];
-        header('location:query_page.php');
+        $_SESSION['userinfo']=$number;
+        echo '<script>
+        location.href="query_page.php";         //管理员登陆成功登陆到管理员页面
+        </script>';
+
         exit;
     }
 }

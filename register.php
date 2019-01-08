@@ -9,7 +9,7 @@
 
 
 <body>
-<?php include 'DB_connect.php'?>
+<?php require 'DB_connect.php'?>
 <?php
 // 定义变量并默认设置为空值
 $nameErr = $numberErr = $ageErr = $classErr = $sexErr = $gradeErr =$pwdErr = $pwd_c_Err = "";
@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
     if($name_f == true && $number_f == true && $age_f == true && $sex_f == true &&
         $class_f == true && $grade_f == true && $pwd_f == true && $pwd_c_f == true){
-        include 'register_form_action.php';
+        require 'register_form_action.php';
     }
 }
 
