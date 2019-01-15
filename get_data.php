@@ -48,7 +48,7 @@ while($row = mysqli_fetch_array($result))
     echo "<td>" . sexShowTrsfmt($row['S_sex']) . "</td>";
     echo "<td>" . $row['S_class'] . "</td>";
     echo "<td>" . $row['S_grade'] . "</td>";
-    echo "<td> <button type='button' onclick='changeInfo(" . $row['S_number'] . ")'>修改</button>
+    echo "<td> <button type='button' onclick='showChangeInfoForm(" . $row['S_number'] . ")'>修改</button>
   <button type='button' onclick='deleteInfo(" . $row['S_number'] . ")'>删除</button></td>";
     echo "</tr>";
     $counter++;
