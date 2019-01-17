@@ -206,7 +206,7 @@ function test_input($data)
                         <span class="error">* <?php echo $pwd_c_Err;?></span></td>
                 </tr>
             </table>
-            <div style="text-align: center">
+            <div>
                 <input type="submit" name="register" value="录入" >
             </div>
         </form>
