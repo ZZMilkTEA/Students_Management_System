@@ -1,15 +1,16 @@
 <?php
-
+require "DB_connect.php";
 session_start();
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
-    if($_SESSION['userinfo'] !== 666666){
+    $id=$_SESSION['userinfo'];
+    if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))
+    {
         echo "<script>window.location.href='index.php';</script>";
     }
 }else{
     echo "<script>window.location.href='index.php';</script>";
 }
 
-require "DB_connect.php";
 mysqli_set_charset($conn, "utf8");
 
 // 定义变量并默认设置为空值
@@ -191,8 +192,8 @@ function sexShowTrsfmt($input){
                 <tr>
                     <td class="f_description">性别： </td>
                     <td style="text-align: left">
-                    <input type="radio" name="sex" <?php if (isset($sex) && $sex=="1") echo "checked";?> value="1">男
-                            <input type="radio" name="sex" <?php if (isset($sex) && $sex=="0") echo "checked";?> value="0">女
+                        <input type="radio" name="sex" <?php if (isset($sex) && $sex=="1") echo "checked";?> value="male">男
+                        <input type="radio" name="sex" <?php if (isset($sex) && $sex=="0") echo "checked";?> value='female'>女
                             <span class="error"><?php echo $sexErr;?></span>
                         </td>
                     </tr>

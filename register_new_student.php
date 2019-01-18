@@ -4,139 +4,124 @@
     <meta charset="UTF-8">
     <title>注册页</title>
 
-    <?php include 'head.php'?>
+    <?php include 'head.html' ?>
 </head>
 
 
 <body>
-<?php require 'DB_connect.php'?>
+<?php require "DB_connect.php";
+if(!session_id()) session_start();
+if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
+    $id=$_SESSION['userinfo'];
+    if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))
+    {
+        echo "<script>window.location.href='index.php';</script>";
+    }
+}else{
+    echo "<script>window.location.href='index.php';</script>";
+} ?>
 <?php
 // 定义变量并默认设置为空值
-$nameErr = $numberErr = $ageErr = $classErr = $sexErr = $gradeErr =$pwdErr = $pwd_c_Err = "";
-$name = $number = $age = $sex = $class = $grade = $pwd = $pwd_c = "";
-$name_f = $number_f = $age_f = $sex_f = $class_f = $grade_f = $pwd_f = $pwd_c_f = false;
+$nameErr = $numberErr = $birthdateErr = $studydateErr = $classErr = $sexErr = $gradeErr =$pwdErr = $pwd_c_Err = "";
+$name = $number = $birthdate = $studydate = $sex = $class = $grade = $pwd = $pwd_c = "";
+$name_f = $number_f = $birthdate_f = $studydate_f = $sex_f = $class_f = $grade_f = $pwd_f = $pwd_c_f = false;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-    if (empty($_POST["number"]))
-    {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["number"])) {
         $numberErr = "学号是必需的";
-    }
-    else
-    {
+    } else {
         $number = test_input($_POST["number"]);
-        if ($number<100000000 ||$number>999999999)
-        {
+        if ($number < 100000000 || $number > 999999999) {
             $numberErr = "非法学号格式";
-        }
-        else if(mysqli_fetch_array(mysqli_query($conn , "select * from STUDENTS where S_number='$number'"))){
+        } else if (mysqli_fetch_array(mysqli_query($conn, "select * from STUDENTS where S_number='$number'"))) {
             $numberErr = "学号已经存在";
-        }
-        else{
+        } else {
             $number_f = true;
         }
     }
 
-    if (empty($_POST["name"]))
-    {
+    if (empty($_POST["name"])) {
         $nameErr = "姓名是必需的";
-    }
-    else{
+    } else {
         $name = test_input($_POST["name"]);
-        if ( strlen($name)>20 ){
-            $nameErr="名字过长";
-        }else{
+        if (strlen($name) > 20) {
+            $nameErr = "名字过长";
+        } else {
             $name_f = true;
         }
     }
 
 
-    if (empty($_POST["class"]))
-    {
+    if (empty($_POST["class"])) {
         $classErr = "班级是必需的";
-    }
-    else
-    {
+    } else {
         $class = test_input($_POST["class"]);
-        if ($class<100000 || $class>999999)
-        {
+        if ($class < 100000 || $class > 999999) {
             $classErr = "非法班级格式";
-        } else{
+        } else {
             $class_f = true;
         }
     }
 
-    if (empty($_POST["age"]))
-    {
-        $ageErr = "年龄是必需的";
-    }
-    else
-    {
-        $age = test_input($_POST["age"]);
-        if ($age<0 || $age>100)
-        {
-            $ageErr = "非法年龄格式";
+    if (empty($_POST["birthdate"])) {
+        $birthdateErr = "年龄是必需的";
+    } else {
+        $birthdate = test_input($_POST["birthdate"]);
+
+            $birthdate_f = true;
         }
-        else{
-            $age_f = true;
-        }
+
+    if (empty($_POST["studydate"])) {
+        $birthdateErr = "入学年份是必需的";
+    } else {
+        $birthdate = test_input($_POST["studydate"]);
+        $birthdate_f = true;
     }
 
-    if (empty($_POST["grade"]))
-    {
+
+    if (empty($_POST["grade"])) {
         $gradeErr = "年级是必需的";
-    }
-    else
-    {
+    } else {
         $grade = test_input($_POST["grade"]);
 
-        if ($grade<1 ||$grade>6)
-        {
+        if ($grade < 1 || $grade > 6) {
             $gradeErr = "非法年级格式";
-        }
-        else{
+        } else {
             $grade_f = true;
         }
     }
 
-    if (empty($_POST["sex"]))
-    {
+    if (empty($_POST["sex"])) {
         $sexErr = "性别是必需的";
-    }
-    else
-    {
+    } else {
         $sex = test_input($_POST["sex"]);
         $sex_f = true;
     }
 
-    if (empty($_POST["pwd"]))
-    {
+    if (empty($_POST["pwd"])) {
         $pwdErr = "密码是必须的";
-    }
-    else
-    {
+    } else {
         $pwd = test_input($_POST["pwd"]);
-        if (strlen($pwd)<6 || strlen($pwd)>16){
+        if (strlen($pwd) < 6 || strlen($pwd) > 16) {
             $pwdErr = "密码格式不合法";
-        }
-        else{
-            $pwd_f=true;
+        } else {
+            $pwd_f = true;
         }
     }
 
-    $pwd_c=test_input($_POST["pwd_confirm"]);
-    if($pwd!=$pwd_c){
+    $pwd_c = test_input($_POST["pwd_confirm"]);
+    if ($pwd != $pwd_c) {
         $pwd_c_Err = "与密码不一致";
-    }
-    else {
-        $pwd_c_f=true;
+    } else {
+        $pwd_c_f = true;
     }
 
-    if($name_f == true && $number_f == true && $age_f == true && $sex_f == true &&
-        $class_f == true && $grade_f == true && $pwd_f == true && $pwd_c_f == true){
-        require 'register_form_action.php';
+    if ($name_f == true && $number_f == true && $birthdate_f == true && $sex_f == true &&
+        $class_f == true && $grade_f == true && $pwd_f == true && $pwd_c_f == true) {
+        require 'register_student_action.php';
     }
 }
+
 
 function test_input($data)
 {
@@ -166,9 +151,14 @@ function test_input($data)
                         <span class="error">* <?php echo $nameErr;?></span></td>
                 </tr>
                 <tr>
-                    <td class="f_description">年龄：</td>
-                    <td class="f_content"><input type="text" name="age" value="<?php echo $age;?>" placeholder="0~100">
-                        <span class="error">* <?php echo $ageErr;?></span></td>
+                    <td class="f_description">出生年月：</td>
+                    <td class="f_content"><input type="date" name="birthdate" value="<?php echo $birthdate;?>" >
+                        <span class="error">* <?php echo $birthdateErr;?></span></td>
+                </tr>
+                <tr>
+                    <td class="f_description">入学日期：</td>
+                    <td class="f_content"><input type="date" name="studydate" value="<?php echo $studydate;?>" >
+                        <span class="error">* <?php echo $studydateErr;?></span></td>
                 </tr>
                 <tr>
                     <td class="f_description">性别： </td>

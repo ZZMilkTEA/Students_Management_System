@@ -7,7 +7,6 @@
  */
 
 require "DB_connect.php";
-
 session_start();
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
     $id=$_SESSION['userinfo'];
@@ -22,7 +21,8 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $S_number = $_POST["number"];
     $S_name = $_POST["name"];
-    $S_age = $_POST["age"];
+    $S_birthdate = $_POST["birthdate"];
+    $S_studydate = $_POST["studydate"];
     if ($_POST["sex"]=="male"){
         $S_sex = 1;
     }else{
@@ -33,11 +33,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $S_pwd = $_POST["pwd"];
 }
 mysqli_select_db($conn,'stu_mngm_sys');
-$sql= "update STUDENTS set S_name = '$S_name', S_birthdate = $S_age, S_sex = $S_sex, S_class = $S_class, S_grade = $S_grade, S_pwd='$S_pwd' where S_number=$S_number";
+$sql= "INSERT INTO STUDENTS (S_number,S_name,S_birthdate,S_studydate,S_sex,S_class,S_grade,S_pwd) VALUES ($S_number,\"$S_name\",\"$S_birthdate\",\"$S_studydate\",$S_sex,$S_class,$S_grade,'$S_pwd');";
 if ($conn->query($sql) === TRUE) {
-    echo '<script>alert("修改成功！");
-    window.close();
-    </script>';
+    echo '<script>alert("录入成功！");
+    location.href="query_page.php"</script>';
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }

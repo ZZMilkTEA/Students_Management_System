@@ -5,9 +5,12 @@
  * Date: 2019/1/2
  * Time: 14:03
  */
+require "DB_connect.php";
 session_start();
+
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
-    if($_SESSION['userinfo'] == 666666){
+    $id=$_SESSION['userinfo'];
+    if(mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'"))){
         echo "<script>window.location.href='index.php';</script>";
     }
 }else{
@@ -21,7 +24,7 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
     <meta charset="UTF-8">
     <title>学生信息管理系统</title>
 
-    <?php include "head.php";
+    <?php include "head.html";
     require "DB_connect.php";
 
     mysqli_set_charset($conn, "utf8");
@@ -63,8 +66,12 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                 <td class="f_content"><?php echo $row['S_name'];?></td>
             </tr>
             <tr>
-                <td>年龄：</td>
-                <td class="f_content"><?php echo $row['S_age'];?></td>
+                <td>出生日期：</td>
+                <td class="f_content"><?php echo $row['S_birthdate'];?></td>
+            </tr>
+            <tr>
+                <td>入学日期：</td>
+                <td class="f_content"><?php echo $row['S_studydate'];?></td>
             </tr>
             <tr>
                 <td>性别：</td>

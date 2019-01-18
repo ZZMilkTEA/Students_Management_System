@@ -1,15 +1,19 @@
 <?php
 session_start();
+
+require "DB_connect.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
     <meta charset="UTF-8">
     <title>学生信息管理系统</title>
 
-    <?php include 'head.php'?>
+    <?php include 'head.html' ?>
     <?php
+
     if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
-        if($_SESSION['userinfo'] == 666666){
+        $id=$_SESSION['userinfo'];
+        if(mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'"))){
             echo "<script>window.location.href='query_page.php';</script>";
         }else{
             echo "<script>window.location.href='student_info.php';</script>";

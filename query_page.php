@@ -5,17 +5,20 @@
  * Date: 2018/12/29
  * Time: 22:57
  */
+require "DB_connect.php";
 
 session_start();
-    if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
-        if($_SESSION['userinfo'] !== 666666){
-            echo "<script>window.location.href='index.php';</script>";
-        }
-    }else{
+if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
+    $id=$_SESSION['userinfo'];
+    if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))
+    {
         echo "<script>window.location.href='index.php';</script>";
     }
+}else{
+    echo "<script>window.location.href='index.php';</script>";
+}
 
-    require "DB_connect.php";
+
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +27,7 @@ session_start();
         <meta charset="UTF-8">
         <title>学生信息管理系统</title>
 
-        <?php include "head.php";?>
+        <?php include "head.html";?>
 
 
         <script>
@@ -39,7 +42,7 @@ session_start();
             }
 
             function jumpToRegister() {
-                window.location.href="register.php";
+                window.location.href="register_new_student.php";
             }
             function jumpToLoginOut() {
                 window.location.href="login_out.php";
@@ -162,11 +165,8 @@ session_start();
            }
         </script>
 
+        <?php require "admin_nvgt.html"?>
 
-        <div class="topnav" id="myTopnav">
-            <a href="#home">学生基本信息查询</a>
-            <a href="#about">学生成绩查询</a>
-        </div>
     </head>
 
     <body>
@@ -175,7 +175,8 @@ session_start();
             <select name="colunm" style="margin: auto" onchange="check(this.value)">
                 <option value="S_number">学号</option>
                 <option value="S_name">姓名</option>
-                <option value="S_age">年龄</option>
+                <option value="S_birthdate">出生日期</option>
+                <option value="S_studydate">入学日期</option>
                 <option value="S_sex">性别</option>
                 <option value="S_class">班级</option>
                 <option value="S_grade">年级</option>
