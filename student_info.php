@@ -11,7 +11,7 @@ session_start();
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
     $id=$_SESSION['userinfo'];
     if(mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'"))){
-        echo "<script>window.location.href='index.php';</script>";
+        echo "<script>window.location.href='query_page.php';</script>";
     }
 }else{
     echo "<script>window.location.href='index.php';</script>";
@@ -29,7 +29,7 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 
     mysqli_set_charset($conn, "utf8");
     $number=$_SESSION['userinfo'];
-    $sql = "SELECT * FROM students WHERE S_number = $number";
+    $sql = "SELECT * FROM students left JOIN classes ON (students.S_class = classes.C_number) left join teachers on classes.C_teacherID = teachers.T_id where S_number = $number;";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
     ?>
@@ -58,31 +58,41 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
         <h2 style="text-align:center;">我的信息</h2>
         <table style=" margin: 0 auto;width: auto">
             <tr>
-                <td>学号：</td>
+                <td class="f_description">学号：</td>
                 <td class="f_content"><?php echo $row['S_number'];?></td>
             </tr>
             <tr>
-                <td>姓名：</td>
+                <td class="f_description">姓名：</td>
                 <td class="f_content"><?php echo $row['S_name'];?></td>
             </tr>
             <tr>
-                <td>出生日期：</td>
+                <td class="f_description">出生日期：</td>
                 <td class="f_content"><?php echo $row['S_birthdate'];?></td>
             </tr>
             <tr>
-                <td>入学日期：</td>
+                <td class="f_description">入学日期：</td>
                 <td class="f_content"><?php echo $row['S_studydate'];?></td>
             </tr>
             <tr>
-                <td>性别：</td>
+                <td class="f_description">性别：</td>
                 <td class="f_content"><?php  if($row['S_sex']==0)echo "女";else echo "男";?></td>
             </tr>
             <tr>
-                <td>班级：</td>
+                <td class="f_description">班级：</td>
                 <td class="f_content"><?php echo $row['S_class'];?></td>
             </tr>
             <tr>
-                <td>年级：</td>
+                <td class="f_description">班主任：</td>
+                <td class="f_content"><?php
+                    if($row['T_name'] == null || $row['T_name'] == ""){
+                        echo "无";
+                    }else {
+                        echo $row['T_name'];
+                    }
+                    ?></td>
+            </tr>
+            <tr>
+                <td class="f_description">年级：</td>
                 <td class="f_content"><?php echo $row['S_grade'];?></td>
             </tr>
         </table>
@@ -170,14 +180,12 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                 <label><b>重复新密码</b></label>
                 <input type="password" name="newPwd_confirm" required>
 
-                <div class="clearfix">
+                <div style="text-align: center;width: auto">
                     <button type="submit" value="修改"  autofocus="autofocus">修改</button>
                     <button type="button" onclick="document.getElementById('changePwdForm').style.display='none'"
                             class="cancelbtn"
                             style="
-                            padding: 14px 20px;
-                            background-color: #f44336;">
-                        取消</button>
+                            background-color: #f44336;">取消</button>
                 </div>
             </div>
         </form>

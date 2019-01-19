@@ -7,7 +7,7 @@
  */
 
 require "DB_connect.php";
-session_start();
+
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
     $id=$_SESSION['userinfo'];
     if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))

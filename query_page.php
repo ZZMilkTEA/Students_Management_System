@@ -10,7 +10,7 @@ require "DB_connect.php";
 session_start();
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
     $id=$_SESSION['userinfo'];
-    if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))
+    if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id';")))
     {
         echo "<script>window.location.href='index.php';</script>";
     }
@@ -29,6 +29,10 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 
         <?php include "head.html";?>
 
+        <!-- 加载分页函数 -->
+        <script src="paging.js"></script>
+
+        <script src="delete_info.js"></script>
 
         <script>
             // 获取模型
@@ -51,6 +55,11 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
             function showData() {
                 var column = document.forms["search_form"]["colunm"].value;
                 var search_content = document.forms["search_form"]["search_content"].value;
+                var graduation =0;
+                var obj=document.getElementsByName("graduation");
+                if (obj[0].checked) {
+                    graduation = 1;
+                }
                 if (window.XMLHttpRequest) {
                     // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
                     xmlhttp=new XMLHttpRequest();
@@ -65,36 +74,13 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                         executeScript(xmlhttp.responseText);
                     }
                 }
-                xmlhttp.open("GET","get_data.php?q1="+ column + "&q2="+search_content,true);
+                xmlhttp.open("GET","get_student_data.php?q1="+ column + "&q2="+search_content + "&q3=" + graduation,true);
                 xmlhttp.send();
             }
 
              function toChangeInfoForm(number){
-                window.open("change_info.php?q1="+number,"","width=800,height=400")
+                window.open("change_stu_info.php?q1="+number,"","width=800,height=400")
              }
-
-
-            function deleteInfo(S_number){
-                var r = confirm("你确定要删除此条信息吗？");
-                if (r==true){
-                    if (window.XMLHttpRequest) {
-                        // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
-                        xmlhttp=new XMLHttpRequest();
-                    }
-                    else {
-                        // IE6, IE5 浏览器执行代码
-                        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-                    }
-                    xmlhttp.onreadystatechange=function() {
-                        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                            alert("删除成功！");
-                            showData();
-                        }
-                    }
-                    xmlhttp.open("GET","delete_info.php?q1=" + S_number ,true);
-                    xmlhttp.send();
-                }
-            }
 
             function executeScript(html)
             {
@@ -119,7 +105,7 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                 }
             }
 
-           function  check(value) {
+           function  check(value) {     //根据属性栏提供不同搜索框
                if (value === "S_sex"){
                    var sexDiv = document.createElement("div");
                    sexDiv.id = "sexDiv";
@@ -161,11 +147,23 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                         searchForm.removeChild(document.getElementById("sexDiv"));
                         searchForm.appendChild(inputBox);
                    }
+                   var searchBox = document.getElementById("searchBox");
+                       searchBox.type="search";
+               }
+
+               if (value === "S_birthdate" || value === "S_studydate"){
+                   var searchBox = document.getElementById("searchBox");
+                   searchBox.type="date";
                }
            }
+
         </script>
 
-        <?php require "admin_nvgt.html"?>
+        <div class="topnav" id="myTopnav">
+            <a href="query_page.php" class="active">学生基本信息查询</a>
+            <a href="query_class_info.php">班级信息查询</a>
+            <a href="query_teacher_info.php">教师管辖班级查询</a>
+        </div>
 
     </head>
 
@@ -180,8 +178,10 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                 <option value="S_sex">性别</option>
                 <option value="S_class">班级</option>
                 <option value="S_grade">年级</option>
+                <option value="S_age">年龄</option>
             <input type="search" name="search_content" id="searchBox" style="margin-left: 5px">
         </form>
+        <input type="checkbox" name="graduation" value="1">显示已毕业学生
         <button type="submit" form="search" onclick="showData()" style="margin-left: 10px">查询</button>
         <button type="button" onclick="jumpToRegister()" style="margin-left: 100px">录入新学生</button>
         <button type="button" onclick="jumpToLoginOut()" style="margin-left: 500px">退出登陆</button>

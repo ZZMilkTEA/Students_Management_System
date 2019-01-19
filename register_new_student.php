@@ -5,6 +5,34 @@
     <title>注册页</title>
 
     <?php include 'head.html' ?>
+
+    <script>
+        function showResult(str)
+        {
+            if (str.length==0)
+            {
+                document.getElementById("txtHint").innerHTML="";
+                return;
+            }
+            if (window.XMLHttpRequest)
+            {// IE7+, Firefox, Chrome, Opera, Safari 浏览器执行
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+            {// IE6, IE5 浏览器执行
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    document.getElementById("E_classes").innerHTML=xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET","get_exist_class.php?q="+str,true);
+            xmlhttp.send();
+        }
+    </script>
 </head>
 
 
@@ -12,17 +40,17 @@
 <?php require "DB_connect.php";
 if(!session_id()) session_start();
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
-    $id=$_SESSION['userinfo'];
-    if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))
-    {
-        echo "<script>window.location.href='index.php';</script>";
-    }
+$id=$_SESSION['userinfo'];
+if(!mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'")))
+{
+echo "<script>window.location.href='index.php';</script>";
+}
 }else{
-    echo "<script>window.location.href='index.php';</script>";
+echo "<script>window.location.href='index.php';</script>";
 } ?>
 <?php
 // 定义变量并默认设置为空值
-$nameErr = $numberErr = $birthdateErr = $studydateErr = $classErr = $sexErr = $gradeErr =$pwdErr = $pwd_c_Err = "";
+$nameErr = $numberErr = $birthdateErr = $studydateErr = $classErr = $sexErr = $gradeErr =$pwdErr = $pwd_cErr = "";
 $name = $number = $birthdate = $studydate = $sex = $class = $grade = $pwd = $pwd_c = "";
 $name_f = $number_f = $birthdate_f = $studydate_f = $sex_f = $class_f = $grade_f = $pwd_f = $pwd_c_f = false;
 
@@ -64,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($_POST["birthdate"])) {
-        $birthdateErr = "年龄是必需的";
+        $birthdateErr = "出生日期是必需的";
     } else {
         $birthdate = test_input($_POST["birthdate"]);
 
@@ -72,10 +100,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
     if (empty($_POST["studydate"])) {
-        $birthdateErr = "入学年份是必需的";
+        $studydateErr = "入学年份是必需的";
     } else {
-        $birthdate = test_input($_POST["studydate"]);
-        $birthdate_f = true;
+        $studydate = test_input($_POST["studydate"]);
+        $studydate_f = true;
     }
 
 
@@ -111,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $pwd_c = test_input($_POST["pwd_confirm"]);
     if ($pwd != $pwd_c) {
-        $pwd_c_Err = "与密码不一致";
+        $pwd_cErr = "与密码不一致";
     } else {
         $pwd_c_f = true;
     }
@@ -142,7 +170,8 @@ function test_input($data)
             <table>
                 <tr>
                     <td class="f_description">学号：</td>
-                    <td class="f_content"><input type="text" name="number" value="<?php echo $number;?>" placeholder="学号为9位整数">
+                    <td class="f_content"><input type="text" name="number"
+                                                 value="<?php echo $number;?>" placeholder="学号为9位整数">
                         <span class="error">* <?php echo $numberErr;?></span></td>
                 </tr>
                 <tr>
@@ -170,7 +199,8 @@ function test_input($data)
                 </tr>
                 <tr>
                     <td class="f_description">班级：</td>
-                    <td class="f_content"><input type="text" name="class" value="<?php echo $class;?>" placeholder="班级为6位整数">
+                    <td class="f_content"><input type="search" name="class" value="<?php echo $class;?>"
+                                                 placeholder="6位数,只能输已存在班级" list="E_classes" onkeyup="showResult(this.value)">
                         <span class="error">* <?php echo $classErr;?></span></td>
                 </tr>
                 <tr>
@@ -193,7 +223,7 @@ function test_input($data)
                 <tr>
                     <td class="f_description">确认密码：</td>
                     <td class="f_content"><input type="password" name="pwd_confirm" value="<?php echo $pwd_c;?>">
-                        <span class="error">* <?php echo $pwd_c_Err;?></span></td>
+                        <span class="error">* <?php echo $pwd_cErr;?></span></td>
                 </tr>
             </table>
             <div>
@@ -202,5 +232,7 @@ function test_input($data)
         </form>
 </div>
 
+
+<datalist id="E_classes"></datalist>
 </body>
 </html>

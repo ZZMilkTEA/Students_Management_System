@@ -6,13 +6,13 @@
  * Time: 11:16
  */
 
-$number = isset($_GET["q1"]) ? intval($_GET["q1"]) : '';
+$number = $_GET["q1"];
 $oldPwd = $_GET["q2"];
 $newPwd = $_GET["q3"];
 
 require "DB_connect.php";
 
-$sql = "select S_pwd from STUDENTS where S_number = $number";
+$sql = "select S_pwd from STUDENTS where S_number = $number;";
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
 
@@ -21,7 +21,7 @@ if($row['S_pwd']!== $oldPwd){
     exit;
 }
 
-$sql = "update STUDENTS set S_pwd = '$newPwd' where S_number = $number";
+$sql = "update STUDENTS set S_pwd = '$newPwd' where S_number = $number;";
 if ($conn->query($sql) === TRUE) {
     echo "
     <script>

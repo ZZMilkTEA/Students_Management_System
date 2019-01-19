@@ -19,17 +19,25 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $C_number = $_POST["number"];
-    $C_teacherID = $_POST["teacherID"];
-
+    $S_number = $_POST["number"];
+    $S_name = $_POST["name"];
+    $S_birthdate = $_POST["birthdate"];
+    $S_studydate = $_POST["studydate"];
+    if ($_POST["sex"]=="male"){
+        $S_sex = 1;
+    }else{
+        $S_sex = 0;
+    }
+    $S_class = $_POST["class"];
+    $S_grade = $_POST["grade"];
+    $S_pwd = $_POST["pwd"];
 }
 mysqli_select_db($conn,'stu_mngm_sys');
-$sql= "INSERT INTO CLASSES (C_number,C_teacherID) VALUES ($C_number,\"$C_teacherID\");";
- if($C_teacherID == "" || $C_teacherID == null)
-     $sql= "INSERT INTO CLASSES (C_number,C_teacherID) VALUES ($C_number,NULL);";
+$sql= "update STUDENTS set S_name = '$S_name', S_birthdate = '$S_birthdate', S_studydate = '$S_studydate', S_sex = $S_sex, S_class = $S_class, S_grade = $S_grade, S_pwd='$S_pwd' where S_number=$S_number";
 if ($conn->query($sql) === TRUE) {
-    echo '<script>alert("录入成功！");
-    location.href="query_class_info.php"</script>';
+    echo '<script>alert("修改成功！");
+    window.close();
+    </script>';
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }

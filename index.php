@@ -1,16 +1,6 @@
 <?php
 session_start();
-
 require "DB_connect.php";
-?>
-<!DOCTYPE html>
-<html lang="en">
-    <meta charset="UTF-8">
-    <title>学生信息管理系统</title>
-
-    <?php include 'head.html' ?>
-    <?php
-
     if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
         $id=$_SESSION['userinfo'];
         if(mysqli_fetch_array(mysqli_query($conn , "select * from admin_account where A_id='$id'"))){
@@ -20,6 +10,14 @@ require "DB_connect.php";
         }
     }
     ?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <title>学生信息管理系统</title>
+
+    <?php include 'head.html' ?>
+
 <script>
     function login() {
         var numberInput = document.forms["loginForm"]["number"].value;

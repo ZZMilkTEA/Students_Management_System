@@ -1,15 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>注册页</title>
-
-    <?php include 'head.html' ?>
-
-</head>
-
-
-<body>
 <?php require "DB_connect.php";
 session_start();
 if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
@@ -21,11 +9,51 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 }else{
     echo "<script>window.location.href='index.php';</script>";
 }?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册页</title>
+
+    <?php include 'head.html' ?>
+
+    <script>
+        function showResult(str)
+        {
+            if (str.length==0)
+            {
+                document.getElementById("txtHint").innerHTML="";
+                return;
+            }
+            if (window.XMLHttpRequest)
+            {// IE7+, Firefox, Chrome, Opera, Safari 浏览器执行
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+            {// IE6, IE5 浏览器执行
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    document.getElementById("E_teacherID").innerHTML=xmlhttp.responseText;
+                }
+            }
+            xmlhttp.open("GET","get_exist_teacher.php?q="+str,true);
+            xmlhttp.send();
+        }
+    </script>
+</head>
+
+
+<body>
+
 
 <?php
 // 定义变量并默认设置为空值
 $teacherErr = $numberErr  = "";
-$teacher = $number = "";
+$teacherID = $number = "";
 $teacher_f = $number_f  = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -49,9 +77,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         }
     }
 
-        $teacher = test_input($_POST["teacher"]);
-        if ( strlen($teacher)>20 ){
-            $teacherErr="名字过长";
+        $teacherID = test_input($_POST["teacherID"]);
+    if(!mysqli_fetch_array(mysqli_query($conn , "select * from teachers where T_id='$teacherID'"))){
+            $teacherErr="该工号不存在";
         }else{
             $teacher_f = true;
         }
@@ -86,15 +114,17 @@ function test_input($data)
                     <span class="error">* <?php echo $numberErr;?></span></td>
             </tr>
             <tr>
-                <td class="f_description">班主任：</td>
-                <td class="f_content"><input type="text" name="teacher" value="<?php echo $teacher;?>">
+                <td class="f_description">班主任工号：</td>
+                <td class="f_content"><input type="search" name="teacherID" value="<?php echo $teacherID;?>"
+                                             onkeyup="showResult(this.value)" placeholder="可为空" list="E_teacherID">
                     <span class="error"> <?php echo $teacherErr;?></span></td>
         </table>
+        <span id="txtHint"></span>
         <div>
             <input type="submit" name="register" value="加入" >
         </div>
     </form>
 </div>
-
+<datalist id="E_teacherID"></datalist>
 </body>
 </html>

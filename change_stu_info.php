@@ -14,9 +14,9 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 mysqli_set_charset($conn, "utf8");
 
 // 定义变量并默认设置为空值
-$nameErr = $numberErr = $ageErr = $classErr = $sexErr = $gradeErr =$pwdErr = "";
-$name = $number = $age = $sex = $class = $grade = $pwd = "";
-$name_f = $number_f = $age_f = $sex_f = $class_f = $grade_f = $pwd_f = false;
+$nameErr = $numberErr = $birthdateErr = $studydateErr = $classErr = $sexErr = $gradeErr =$pwdErr  = "";
+$name = $number = $birthdate = $studydate = $sex = $class = $grade = $pwd  = "";
+$name_f = $number_f = $birthdate_f = $studydate_f = $sex_f = $class_f = $grade_f = $pwd_f  = false;
 
 
 if(isset($_GET["q1"])) {
@@ -27,8 +27,13 @@ if(isset($_GET["q1"])) {
     $row = mysqli_fetch_array($result);
 
     $name = $row['S_name'];
-    $age = $row['S_age'];
-    $sex = $row['S_sex'];
+    $birthdate = $row['S_birthdate'];
+    $studydate = $row['S_studydate'];
+    if ($row['S_sex'] == 1){
+        $sex = "male";
+    }else{
+        $sex = "female";
+    }
     $class = $row['S_class'];
     $grade = $row['S_grade'];
     $pwd = $row['S_pwd'];
@@ -84,20 +89,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         }
     }
 
-    if (empty($_POST["age"]))
-    {
-        $ageErr = "年龄是必需的";
+    if (empty($_POST["birthdate"])) {
+        $birthdateErr = "出生日期是必需的";
+    } else {
+        $birthdate = test_input($_POST["birthdate"]);
+
+        $birthdate_f = true;
     }
-    else
-    {
-        $age = test_input($_POST["age"]);
-        if ($age<0 || $age>100)
-        {
-            $ageErr = "非法年龄格式";
-        }
-        else{
-            $age_f = true;
-        }
+
+    if (empty($_POST["studydate"])) {
+        $studydateErr = "入学年份是必需的";
+    } else {
+        $studydate = test_input($_POST["studydate"]);
+        $studydate_f = true;
     }
 
     if (empty($_POST["grade"]))
@@ -143,9 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
 
 
-    if($name_f == true &&  $age_f == true && $sex_f == true &&
+    if($name_f == true &&  $birthdate_f == true && $sex_f == true &&
         $class_f == true && $grade_f == true && $pwd_f == true ){
-        require 'change_info_form_action.php';
+        require 'change_stu_info_action.php';
     }
 }
 
@@ -164,11 +168,39 @@ function sexShowTrsfmt($input){
     if($input==1)return "男";
 }
 ?>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <div id="changePwdForm" class="modal" style="display: block">
+<link rel="stylesheet" type="text/css" href="style.css">
+<script>
+    function showResult(str)
+    {
+        if (str.length==0)
+        {
+            document.getElementById("txtHint").innerHTML="";
+            return;
+        }
+        if (window.XMLHttpRequest)
+        {// IE7+, Firefox, Chrome, Opera, Safari 浏览器执行
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// IE6, IE5 浏览器执行
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                document.getElementById("E_classes").innerHTML=xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("GET","get_exist_class.php?q="+str,true);
+        xmlhttp.send();
+    }
+</script>
+
+<div id="changeStuForm" class="modal" style="display: block">
         <form name="changeInfoForm"
               class="modal-content animate"
-              name="changePwdForm"
+              name="changeStuForm"
               action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
               method="post">
         <div class="container">
@@ -185,21 +217,27 @@ function sexShowTrsfmt($input){
                         <span class="error"> <?php echo $nameErr;?></span></td>
                 </tr>
                 <tr>
-                    <td class="f_description">年龄：</td>
-                    <td class="f_content"><input type="text" name="age" value="<?php echo $age;?>" placeholder="0~100">
-                        <span class="error"><?php echo $ageErr;?></span></td>
+                    <td class="f_description">出生年月：</td>
+                    <td class="f_content"><input type="date" name="birthdate" value="<?php echo $birthdate;?>" >
+                        <span class="error"> <?php echo $birthdateErr;?></span></td>
+                </tr>
+                <tr>
+                    <td class="f_description">入学日期：</td>
+                    <td class="f_content"><input type="date" name="studydate" value="<?php echo $studydate;?>" >
+                        <span class="error"> <?php echo $studydateErr;?></span></td>
                 </tr>
                 <tr>
                     <td class="f_description">性别： </td>
                     <td style="text-align: left">
-                        <input type="radio" name="sex" <?php if (isset($sex) && $sex=="1") echo "checked";?> value="male">男
-                        <input type="radio" name="sex" <?php if (isset($sex) && $sex=="0") echo "checked";?> value='female'>女
+                        <input type="radio" name="sex" <?php if (isset($sex) && $sex=="male") echo "checked";?> value="male">男
+                        <input type="radio" name="sex" <?php if (isset($sex) && $sex=="female") echo "checked";?> value='female'>女
                             <span class="error"><?php echo $sexErr;?></span>
                         </td>
                     </tr>
                     <tr>
                         <td class="f_description">班级：</td>
-                        <td class="f_content"><input type="text" name="class" value="<?php echo $class;?>" placeholder="班级为6位整数">
+                        <td class="f_content"><input type="search" name="class" value="<?php echo $class;?>" placeholder="6位数,只能输已存在班级"
+                                                     list="E_classes" onkeyup="showResult(this.value)">
                             <span class="error"> <?php echo $classErr;?></span></td>
                     </tr>
                     <tr>
@@ -216,7 +254,7 @@ function sexShowTrsfmt($input){
                     </tr>
                     <tr>
                         <td class="f_description">密码：</td>
-                        <td class="f_content"><input type="text" name="pwd"value="<?php echo $pwd;?>"placeholder="请输入6~16位的密码">
+                        <td class="f_content"><input type="text" name="pwd"value="<?php echo $pwd;?>" placeholder="请输入6~16位的密码">
                             <span class="error"> <?php echo $pwdErr;?></span></td>
                     </tr>
                 </table>
@@ -230,4 +268,6 @@ function sexShowTrsfmt($input){
                 </div>
             </div>
         </form>
-    </div>
+</div>
+
+<datalist id="E_classes"></datalist>

@@ -16,7 +16,12 @@ body {margin:0;}
 }
 
 .topnav a:hover {
-    background-color: #ddd;
+    background-color: #ccc;
+    color: black;
+}
+
+.topnav a.active{
+    background-color: #eee;
     color: black;
 }
 
@@ -25,7 +30,7 @@ body {margin:0;}
 }
 
 .head {
-    background-color: #f2f2f2;
+    background-color: #e8e8e8;
     height: 100px;
     margin-top: 0px;
 }
@@ -66,19 +71,19 @@ body {margin:0;}
     margin-left: 10px;
 }
 
-#students{
+#resultTable{
     font-family: "Trebuchet MS",Arial,sans-serif;
     width: 100%;
     border-collapse: collapse;
 }
 
-#students td,#students th{
+#resultTable td,#resultTable th{
     font-size:1em;
     border:1px solid #333333;
     padding: 3px 7px 2px 7px;
 }
 
-#students th{
+#resultTable th{
     font-size: 1.1em;
     text-align: left;
     padding-top: 5px;
@@ -86,7 +91,7 @@ body {margin:0;}
     background-color: #aaaaaa;
 }
 
-#students tr.alt td{
+#resultTable tr.alt td{
     color: #000000;
     background-color: #dddddd;
 }
@@ -106,13 +111,8 @@ body {margin:0;}
     width: 40%;
 }
 
-/* Extra styles for the cancel button */
-.cancelbtn {
-    background-color: #f44336;
-}
-
 /* Float cancel and signup buttons and add an equal width */
-.cancelbtn,.signupbtn {float:left;width:50%}
+.cancelbtn,.signupbtn {width:50%}
 
 /* Add padding to container elements */
 .container {
@@ -156,14 +156,6 @@ body {margin:0;}
 .close:focus {
     color: red;
     cursor: pointer;
-}
-
-/* Clear floats */
-.clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
-    align-content: center;
 }
 
 /* Change styles for cancel button and signup button on extra small screens */

@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: ZZMilkTEA
- * Date: 2018/12/27
- * Time: 1:36
+ * Date: 2019/1/19
+ * Time: 19:36
  */
 
 require "DB_connect.php";
@@ -20,20 +20,12 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $S_number = $_POST["number"];
-    $S_name = $_POST["name"];
-    $S_age = $_POST["age"];
-    if ($_POST["sex"]=="male"){
-        $S_sex = 1;
-    }else{
-        $S_sex = 0;
-    }
-    $S_class = $_POST["class"];
-    $S_grade = $_POST["grade"];
-    $S_pwd = $_POST["pwd"];
+    $C_number = $_POST["number"];
+    $C_teacherID = $_POST["teacherID"];
+
 }
 mysqli_select_db($conn,'stu_mngm_sys');
-$sql= "update STUDENTS set S_name = '$S_name', S_birthdate = $S_age, S_sex = $S_sex, S_class = $S_class, S_grade = $S_grade, S_pwd='$S_pwd' where S_number=$S_number";
+$sql= "update classes set C_teacherID = $C_teacherID where C_number=$C_number";
 if ($conn->query($sql) === TRUE) {
     echo '<script>alert("修改成功！");
     window.close();

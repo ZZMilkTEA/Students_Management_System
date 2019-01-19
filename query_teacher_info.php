@@ -2,9 +2,10 @@
 /**
  * Created by PhpStorm.
  * User: ZZMilkTEA
- * Date: 2018/12/29
- * Time: 22:57
+ * Date: 2019/1/19
+ * Time: 21:03
  */
+
 require "DB_connect.php";
 
 session_start();
@@ -68,12 +69,12 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
                     executeScript(xmlhttp.responseText);
                 }
             }
-            xmlhttp.open("GET","get_class_data.php?q1="+ column + "&q2="+search_content,true);
+            xmlhttp.open("GET","get_teacher_data.php?q1="+ column + "&q2="+search_content,true);
             xmlhttp.send();
         }
 
         function toChangeInfoForm(number){
-            window.open("change_cls_info.php?q1="+number,"","width=800,height=400")
+            window.open("change_tc_info.php?q1="+number,"","width=800,height=400")
         }
 
         function executeScript(html)
@@ -106,8 +107,8 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 
     <div class="topnav" id="myTopnav">
         <a href="query_page.php">学生基本信息查询</a>
-        <a href="query_class_info.php" class="active">班级信息查询</a>
-        <a href="query_teacher_info.php">教师管辖班级查询</a>
+        <a href="query_class_info.php" >班级信息查询</a>
+        <a href="query_teacher_info.php" class="active">教师管辖班级查询</a>
     </div>
 
 </head>
@@ -116,14 +117,14 @@ if (isset($_SESSION['userinfo']) && !empty($_SESSION['userinfo'])) {
 <div class="search_form" style="margin-top: 10px" >
     <form id="search_form" name="search_form" style="display:inline;">
         <select name="colunm" style="margin: auto" >
+            <option value="T_id">工号</option>
+            <option value="T_name">教师姓名</option>
             <option value="C_number">班号</option>
-            <option value="C_teacherID">班主任工号</option>
-            <option value="T_id">班主任姓名</option>
 
             <input type="search" name="search_content" id="searchBox" style="margin-left: 5px">
     </form>
     <button type="submit" form="search" onclick="showData()" style="margin-left: 10px">查询</button>
-    <button type="button" onclick="jumpToAddNewClass()" style="margin-left: 100px">加入新班级</button>
+    <button type="button" onclick="jumpToAddNewTeacger()" style="margin-left: 100px">录入新教师</button>
     <button type="button" onclick="jumpToLoginOut()" style="margin-left: 500px">退出登陆</button>
 </div>
 
